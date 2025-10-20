@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe Question, type: :model do
   subject { build(:question) }
 
+  describe 'associations' do
+    # it { should belong_to(:user) }
+    it { should have_many(:answers).dependent(:destroy) }
+  end
+
   describe 'validations' do
     context 'title' do
       it { should validate_presence_of(:title) }
@@ -16,26 +21,6 @@ RSpec.describe Question, type: :model do
       it { should validate_length_of(:body).is_at_least(32) }
       it { should validate_length_of(:body).is_at_most(1024) }
     end
-  end
-
-  # Проверю когда добавлю модель Answer и User
-  # describe 'associations' do
-  #   it { should belong_to(:user) }
-  #   it { should have_many(:answers).dependent(:destroy) }
-  # end
-
-  describe 'database columns' do
-    it { should have_db_column(:title).of_type(:string).with_options(null: false) }
-    it { should have_db_column(:body).of_type(:text).with_options(null: false) }
-    # Проверим когда доавлю user_id
-    # it { should have_db_column(:user_id).of_type(:integer) }
-    it { should have_db_column(:created_at).of_type(:datetime) }
-    it { should have_db_column(:updated_at).of_type(:datetime) }
-  end
-
-  describe 'index on db' do
-    it { should have_db_index(:title) }
-    it { should have_db_index(:created_at) }
   end
 
   describe 'edge cases' do
@@ -116,28 +101,41 @@ RSpec.describe Question, type: :model do
         end
       end
     end
+  end
+  describe 'uniqueness' do
+    it 'does not allow duplicate titles' do
+      original = create(:question)
 
-    describe 'uniqueness' do
-      it 'does not allow duplicate titles' do
-        original = create(:question)
-
-        duplicate = build(:question, title: original.title)
-        expect(duplicate).not_to be_valid
-        expect(duplicate.errors[:title]).to include('has already been taken')
-      end
-
-      it 'allows same title after deletion' do
-        question = create(:question)
-        saved_title = question.title
-        question.destroy
-
-        new_question = build(:question, title: saved_title)
-        expect(new_question).to be_valid
-      end
+      duplicate = build(:question, title: original.title)
+      expect(duplicate).not_to be_valid
+      expect(duplicate.errors[:title]).to include('has already been taken')
     end
 
-    # Добавлю когда будет ассоциация dependent destroy
-    # context 'dependent destroy' do
-    # end
+    it 'allows same title after deletion' do
+      question = create(:question)
+      saved_title = question.title
+      question.destroy
+
+      new_question = build(:question, title: saved_title)
+      expect(new_question).to be_valid
+    end
+  end
+
+  context 'dependent destroy' do
+    it { should have_many(:answers).dependent(:destroy) }
+  end
+
+  describe 'database columns' do
+    it { should have_db_column(:title).of_type(:string).with_options(null: false) }
+    it { should have_db_column(:body).of_type(:text).with_options(null: false) }
+    # Проверим когда доавлю user_id
+    # it { should have_db_column(:user_id).of_type(:integer) }
+    it { should have_db_column(:created_at).of_type(:datetime) }
+    it { should have_db_column(:updated_at).of_type(:datetime) }
+  end
+
+  describe 'index on db' do
+    it { should have_db_index(:title) }
+    it { should have_db_index(:created_at) }
   end
 end

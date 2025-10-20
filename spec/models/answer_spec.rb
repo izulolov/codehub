@@ -1,32 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
+  describe 'associations' do
+    it { should belong_to(:question) }
+    # it { should belong_to(:user) }
+  end
   describe 'validations' do
     context 'body' do
       it { should validate_presence_of(:body) }
       it { should validate_length_of(:body).is_at_least(32) }
       it { should validate_length_of(:body).is_at_most(2048) }
     end
-  end
-
-  # Проверю когда добавлю модель Question и User
-  # describe 'associations' do
-  #   it { should belong_to(:question) }
-  #   it { should belong_to(:user) }
-  # end
-
-  describe 'database columns' do
-    it { should have_db_column(:body).of_type(:text).with_options(null: false) }
-    # Проверим когда добавлю user_id и question_id
-    # it { should have_db_column(:user_id).of_type(:integer) }
-    # it { should have_db_column(:question_id).of_type(:integer) }
-    it { should have_db_column(:created_at).of_type(:datetime) }
-    it { should have_db_column(:updated_at).of_type(:datetime) }
-  end
-
-  describe 'indexes on db' do
-    it { should have_db_index(:body) }
-    it { should have_db_index(:created_at) }
   end
 
   describe 'edge cases' do
@@ -66,5 +50,19 @@ RSpec.describe Answer, type: :model do
         expect(answer.errors[:body]).to include('is too long (maximum is 2048 characters)')
       end
     end
+  end
+
+  describe 'database columns' do
+    it { should have_db_column(:body).of_type(:text).with_options(null: false) }
+    # Проверим когда добавлю user_id и question_id
+    # it { should have_db_column(:user_id).of_type(:integer) }
+    it { should have_db_column(:question_id).of_type(:integer) }
+    it { should have_db_column(:created_at).of_type(:datetime) }
+    it { should have_db_column(:updated_at).of_type(:datetime) }
+  end
+
+  describe 'indexes on db' do
+    it { should have_db_index(:body) }
+    it { should have_db_index(:created_at) }
   end
 end
