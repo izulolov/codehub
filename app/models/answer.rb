@@ -1,7 +1,9 @@
 class Answer < ApplicationRecord
-  before_validation :strip_whitespace
+  belongs_to :question
 
   validates :body, presence: true, length: { minimum: 32, maximum: 2048 }
+
+  before_validation :strip_whitespace
 
   private
 
