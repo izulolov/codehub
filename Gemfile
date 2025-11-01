@@ -51,7 +51,7 @@ group :development, :test do
   gem "factory_bot_rails"
 
   # Debug code
-  gem "pry-rails"
+  gem "pry"
 end
 
 group :development do
