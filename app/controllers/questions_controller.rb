@@ -21,7 +21,7 @@ class QuestionsController < ApplicationController
     if @question.save
       redirect_to @question
     else
-      render :new
+      render :new, status: :unprocessable_entity # 422
     end
   end
 
@@ -29,13 +29,13 @@ class QuestionsController < ApplicationController
     if @question.update(question_params)
       redirect_to @question
     else
-      render :edit
+      render :edit, status: :unprocessable_entity # 422
     end
   end
 
   def destroy
     @question.destroy
-    redirect_to question_path
+    redirect_to questions_path
   end
 
   private

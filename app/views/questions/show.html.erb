@@ -1,0 +1,29 @@
+<h1>Вопрос #<%= @question.id %></h1>
+
+<%= link_to 'Назад к списку', questions_path %>
+
+<hr>
+
+<article>
+  <header>
+    <h2><%= @question.title %></h2>
+    <small>
+      Создан: <%= @question.created_at.strftime('%d.%m.%Y в %H:%M') %>
+    </small>
+  </header>
+  
+  <section>
+    <%= simple_format(@question.body) %>
+  </section>
+</article>
+
+<hr>
+
+<nav>
+    <%= link_to 'Редактировать вопрос', edit_question_path(@question) %> |
+    <%= link_to 'Удалить вопрос', @question, 
+        data: { 
+          turbo_method: :delete, 
+          turbo_confirm: 'Вы уверены, что хотите удалить этот вопрос?' 
+        } %>
+</nav>
