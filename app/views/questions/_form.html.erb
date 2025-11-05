@@ -1,0 +1,27 @@
+<%= form_with model: @question, local: true do |f| %>
+  <% if @question.errors.any? %>
+    <div class="errors" style="color: red; background: #ffe6e6; padding: 10px; margin-bottom: 20px; border: 1px solid red;">
+      <h3>Обнаружено <%= @question.errors.count %> ошибок при сохранении:</h3>
+      <ul>
+        <% @question.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <p>
+    <%= f.label :title, "Заголовок вопроса" %><br>
+    <%= f.text_field :title, placeholder: 'Например: Как работает замыкание в JavaScript?', size: 50 %>
+  </p>
+  
+  <p>
+    <%= f.label :body, "Описание проблемы" %><br>
+    <%= f.text_area :body, rows: 10, cols: 50, placeholder: 'Опишите вашу проблему подробно...' %>
+  </p>
+  
+  <p>
+    <%= f.submit 'Создать вопрос' %>
+    <%= link_to 'Отмена', questions_path %>
+  </p>
+<% end %>

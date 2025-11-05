@@ -1,0 +1,16 @@
+<h1>Все вопросы на сайте CodeHub</h1>
+
+<%= link_to 'Задать вопрос', new_question_path %>
+
+<% if @questions.any? %>
+  <% @questions.each do |question| %>
+    <div>
+      <h3><%= link_to question.title, question_path(question) %></h3>
+      <p><%= truncate(question.body, length: 200) %></p>
+      <small>Создан: <%= time_ago_in_words(question.created_at) %> назад</small>
+      <hr>
+    </div>
+  <% end %>
+<% else %>
+  <p>Вопросов пока нет. Будьте первым!</p>
+<% end %>
