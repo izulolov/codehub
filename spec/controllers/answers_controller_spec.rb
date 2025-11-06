@@ -27,7 +27,6 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to question page' do
         post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
-        # expect(response).to redirect_to assigns(:question)
         expect(response).to redirect_to(question_path(question))
         expect(flash[:notice]).to eq('Answer was successfully created.')
       end
@@ -49,7 +48,7 @@ RSpec.describe AnswersController, type: :controller do
           answer: attributes_for(:answer, body: nil)
         }
 
-        expect(response).to redirect_to(question_path(question))
+        expect(response).to render_template 'questions/show'
         expect(flash[:alert]).to eq('Failed to create answer.')
       end
     end
