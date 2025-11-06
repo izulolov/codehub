@@ -27,3 +27,54 @@
           turbo_confirm: 'Вы уверены, что хотите удалить этот вопрос?' 
         } %>
 </nav>
+
+<hr>
+
+<h3>Ответы (<%= @question.answers.count %>)</h3>
+
+<% if @question.answers.any? %>
+  <% @question.answers.each do |ans| %>
+    <% next unless ans.persisted? %>
+    <article style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+      <%= simple_format(ans.body) %>
+      <small>
+        Создан: <%= ans.created_at.strftime('%d.%m.%Y в %H:%M') %>
+      </small>
+    </article>
+  <% end %>
+<% else %>
+  <p>Пока нет ответов. Будьте первым!</p>
+<% end %>
+
+<hr>
+
+<h3>Ваш ответ</h3>
+
+<% if notice %>
+  <div style="color: green; padding: 10px; background: #d4edda; margin: 10px 0;">
+    <%= notice %>
+  </div>
+<% end %>
+
+<% if alert %>
+  <div style="color: red; padding: 10px; background: #f8d7da; margin: 10px 0;">
+    <%= alert %>
+  </div>
+<% end %>
+
+<%= form_with model: [@question, @answer], local: true do |f| %>
+  <% if @answer.errors.any? %>
+    <div style="color: red; padding: 10px; background: #f8d7da; margin: 10px 0;">
+      <h4>Ошибки:</h4>
+      <ul>
+        <% @answer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.text_area :body, placeholder: "Напишите ваш ответ здесь...", rows: 5, style: "width: 100%;" %>
+  <br>
+  <%= f.submit "Отправить ответ", style: "margin-top: 10px;" %>
+<% end %>
