@@ -6,6 +6,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
+    @answer = @question.answers.new # shit
   end
 
   def new
