@@ -6,7 +6,8 @@ class AnswersController < ApplicationController
       redirect_to @question, notice: "Answer was successfully created."
     else
       # redirect_to @question, alert: "Failed to create answer." # Теряет ошибки
-      render "questions/show", status: :unprocessable_entity, alert: "Failed to create answer."
+      flash.now[:alert] = "Failed to create answer."
+      render "questions/show", status: :unprocessable_entity
     end
   end
 
