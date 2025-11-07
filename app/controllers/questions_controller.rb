@@ -6,7 +6,11 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = Answer.new(question_id: @question.id)
+    if params[:edit_answer_id]
+      @answer = @question.answers.find(params[:edit_answer_id])
+    else
+      @answer = Answer.new(question_id: @question.id)
+    end
   end
 
   def new
