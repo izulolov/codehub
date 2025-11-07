@@ -34,7 +34,6 @@
 
 <% if @question.answers.any? %>
   <% @question.answers.each do |ans| %>
-    <% next unless ans.persisted? %>
     <article style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
       <%= simple_format(ans.body) %>
       <small>

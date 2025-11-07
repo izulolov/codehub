@@ -6,7 +6,7 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    @answer = @question.answers.new # shit
+    @answer = Answer.new(question_id: @question.id)
   end
 
   def new
