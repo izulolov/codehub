@@ -1,54 +1,42 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:question) { create(:question) }
+  let(:valid_attributes) { attributes_for(:answer) }
+  let(:invalid_attributes) { attributes_for(:answer, body: nil) }
+
   describe 'POST #create' do
-    let(:question) { create(:question) }
-
     context 'with valid data' do
-      it 'creates new answer' do
-        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
-
-        expect(Answer.last).not_to be_nil
+      subject(:create_answer) do
+        post :create, params: { question_id: question.id, answer: valid_attributes }
       end
 
-      it 'increases answers count by 1' do
-        expect {
-          post :create, params: {
-            question_id: question.id,
-            answer: attributes_for(:answer)
-          }
-        }.to change(Answer, :count).by(1)
+      it 'creates a new answer associated with the question' do
+        expect { create_answer }.to change(question.answers, :count).by(1)
       end
 
-      it 'associates answer with question' do
-        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
-        expect(Answer.last.question_id).to eq(question.id)
-      end
+      it 'redirects to question page with success notice' do
+        create_answer
 
-      it 'redirects to question page' do
-        post :create, params: { question_id: question.id, answer: attributes_for(:answer) }
         expect(response).to redirect_to(question_path(question))
         expect(flash[:notice]).to eq('Answer was successfully created.')
       end
     end
 
     context 'with invalid data' do
-      it 'does not create answer' do
-        expect {
-          post :create, params: {
-            question_id: question.id,
-            answer: attributes_for(:answer, body: nil)
-          }
-        }.not_to change(Answer, :count)
+      subject(:create_invalid_answer) do
+        post :create, params: { question_id: question.id, answer: invalid_attributes }
       end
 
-      it 'redirects back to question with error' do
-        post :create, params: {
-          question_id: question.id,
-          answer: attributes_for(:answer, body: nil)
-        }
+      it 'does not create an answer' do
+        expect { create_invalid_answer }.not_to change(Answer, :count)
+      end
 
-        expect(response).to render_template 'questions/show'
+      it 'renders question show template with error message' do
+        create_invalid_answer
+
+        expect(response).to render_template('questions/show')
+        expect(response).to have_http_status(:unprocessable_entity)
         expect(flash[:alert]).to eq('Failed to create answer.')
       end
     end
