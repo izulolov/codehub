@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
+  let(:answer) { create(:answer, question: question) }
   let(:valid_attributes) { attributes_for(:answer) }
   let(:invalid_attributes) { attributes_for(:answer, body: nil) }
 
@@ -38,6 +39,44 @@ RSpec.describe AnswersController, type: :controller do
         expect(response).to render_template('questions/show')
         expect(response).to have_http_status(:unprocessable_entity)
         expect(flash[:alert]).to eq('Failed to create answer.')
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    let(:new_body) { "This is new body for testing update test!" }
+
+    context 'with valid data' do
+      subject(:update_answer) do
+        patch :update, params: { question_id: question.id, id: answer.id, answer: { body: new_body } }
+      end
+
+      it 'updates the answer' do
+        expect { update_answer }.to change { answer.reload.body }.from(answer.body).to(new_body)
+      end
+
+      it 'redirects to question page with success notice' do
+        update_answer
+        expect(response).to redirect_to(question_path(question))
+        expect(flash[:notice]).to eq('Answer was successfully updated.')
+      end
+    end
+
+    context 'with invalid data' do
+      subject(:update_invalid_answer) do
+        patch :update, params: { question_id: question.id, id: answer.id, answer: invalid_attributes }
+      end
+
+      it 'does not update the answer' do
+        expect { update_invalid_answer }.not_to change { answer.reload.body }
+      end
+
+      it 'renders question show template with error message' do
+        update_invalid_answer
+
+        expect(response).to render_template('questions/show')
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(flash[:alert]).to eq('Failed to update answer.')
       end
     end
   end
