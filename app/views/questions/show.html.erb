@@ -82,4 +82,9 @@
   <%= f.text_area :body, placeholder: "Напишите ваш ответ здесь...", rows: 5, style: "width: 100%;" %>
   <br>
   <%= f.submit "Отправить ответ", style: "margin-top: 10px;" %>
+  
+  <% if params[:edit_answer_id] %>
+    <%= link_to 'Отмена', question_path %>
+  <% end %>
+
 <% end %>
