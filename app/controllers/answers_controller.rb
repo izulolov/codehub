@@ -3,7 +3,14 @@ class AnswersController < ApplicationController
   before_action :load_answer, only: [ :update, :destroy ]
 
   def create
-    @answer = @question.answers.build(answer_params)
+    # @answer = @question.answers.new(answer_params) - создаёт nil, будет ошибка
+    # @answer = @question.answers.build(answer_params) - создаёт nil, будет ошибка
+
+    # Поэтому придумал вот такое решение.
+    # Такой метод не доавляет ответ в коллекцию, поэтому будет не nil
+    @answer = Answer.new(answer_params)
+    @answer.question = @question
+
     if @answer.save
       redirect_to @question, notice: "Answer was successfully created."
     else
