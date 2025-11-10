@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
   before_action :load_question, only: [ :show, :edit, :update, :destroy ]
 
   def index
@@ -24,23 +25,23 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
 
     if @question.save
-      redirect_to @question
+      redirect_to @question, notice: "Your question was succesfully created"
     else
-      render :new, status: :unprocessable_entity # 422
+      render :new, status: :unprocessable_entity
     end
   end
 
   def update
     if @question.update(question_params)
-      redirect_to @question
+      redirect_to @question, notice: "Your question was succesfully updated"
     else
-      render :edit, status: :unprocessable_entity # 422
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     @question.destroy
-    redirect_to questions_path
+    redirect_to questions_path, notice: "Question was successfully deleted"
   end
 
   private

@@ -11,17 +11,21 @@
   <% end %>
   
   <p>
-    <%= f.label :title, "Заголовок вопроса" %><br>
+    <%= f.label :title, "Title" %><br>
     <%= f.text_field :title, placeholder: 'Например: Как работает замыкание в JavaScript?', size: 50 %>
   </p>
   
   <p>
-    <%= f.label :body, "Описание проблемы" %><br>
+    <%= f.label :body, "Body" %><br>
     <%= f.text_area :body, rows: 10, cols: 50, placeholder: 'Опишите вашу проблему подробно...' %>
   </p>
   
   <p>
-    <%= f.submit 'Создать вопрос' %>
-    <%= link_to 'Отмена', question_path %>
+    <%= f.submit @question.new_record? ? 'Создать вопрос' : 'Обновить вопрос' %>
+    <% if @question.persisted? %>
+      <%= link_to 'Отмена', question_path(@question) %>
+    <% else %>
+      <%= link_to 'Отмена', questions_path %>
+    <% end %>
   </p>
 <% end %>
