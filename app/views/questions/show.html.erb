@@ -1,6 +1,6 @@
-<h1>Вопрос #<%= @question.id %></h1>
+<h1>Question #<%= @question.id %></h1>
 
-<%= link_to 'Назад к списку', questions_path %>
+<%= link_to 'Back to list', questions_path %>
 
 <% if notice %>
   <div style="color: green; padding: 10px; background: #d4edda; margin: 10px 0;">
@@ -20,7 +20,7 @@
   <header>
     <h2><%= @question.title %></h2>
     <small>
-      Создан: <%= @question.created_at.strftime('%d.%m.%Y в %H:%M') %>
+      Created: <%= @question.created_at.strftime('%d.%m.%Y в %H:%M') %>
     </small>
   </header>
   
@@ -32,17 +32,17 @@
 <hr>
 
 <nav>
-    <%= link_to 'Редактировать вопрос', edit_question_path(@question) %> |
-    <%= link_to 'Удалить вопрос', @question, 
+    <%= link_to 'Edit the question', edit_question_path(@question) %> |
+    <%= link_to 'Delet a question', @question, 
         data: { 
           turbo_method: :delete, 
-          turbo_confirm: 'Вы уверены, что хотите удалить этот вопрос?' 
+          turbo_confirm: 'Are you sure you want to delete this question?' 
         } %>
 </nav>
 
 <hr>
 
-<h3>Ответы (<%= @question.answers.count %>)</h3>
+<h3>Answers (<%= @question.answers.count %>)</h3>
 
 <% if @question.answers.any? %>
   <% @question.answers.each do |ans| %>
@@ -50,27 +50,27 @@
       <%= simple_format(ans.body) %>
       <small>
         Создан: <%= ans.created_at.strftime('%d.%m.%Y в %H:%M') %>
-        <%= link_to 'Редактировать ответ', question_path(@question, edit_answer_id: ans.id) %> |
-        <%= link_to 'Удалить ответ', question_answer_path(@question, ans), 
+        <%= link_to 'Edit the answer', question_path(@question, edit_answer_id: ans.id) %> |
+        <%= link_to 'Delete a answer', question_answer_path(@question, ans), 
                 data: { 
                   turbo_method: :delete, 
-                  turbo_confirm: 'Вы уверены, что хотите удалить этот ответ?' 
+                  turbo_confirm: 'Are you sure you want to delete this answer?' 
                 } %>
       </small>
     </article>
   <% end %>
 <% else %>
-  <p>Пока нет ответов. Будьте первым!</p>
+  <p>There are no answers yet. Be the first!</p>
 <% end %>
 
 <hr>
 
-<h3>Ваш ответ</h3>
+<h3>Your answer</h3>
 
 <%= form_with model: [@question, @answer], local: true do |f| %>
   <% if @answer.errors.any? %>
     <div style="color: red; padding: 10px; background: #f8d7da; margin: 10px 0;">
-      <h4>Ошибки:</h4>
+      <h4>Errors:</h4>
       <ul>
         <% @answer.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -79,11 +79,11 @@
     </div>
   <% end %>
 
-  <%= f.text_area :body, placeholder: "Напишите ваш ответ здесь...", rows: 5, style: "width: 100%;" %>
+  <%= f.text_area :body, placeholder: "Write your answer here...", rows: 5, style: "width: 100%;" %>
   <br>
-  <%= f.submit "Отправить ответ", style: "margin-top: 10px;" %>
+  <%= f.submit "Send a answer", style: "margin-top: 10px;" %>
   
   <% if params[:edit_answer_id] %>
-    <%= link_to 'Отмена', question_path(@question) %>
+    <%= link_to 'Cancel', question_path(@question) %>
   <% end %>
 <% end %>
