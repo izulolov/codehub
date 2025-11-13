@@ -11,13 +11,13 @@ feature 'User can create question', %q(
       sign_in(user)
 
       visit questions_path
-      click_on 'Задать вопрос'
+      click_on 'Create question'
     end
 
     scenario 'asks a question' do
       fill_in 'Title', with: 'Test question with enough characters'
       fill_in 'Body', with: 'text text text text text text text text'
-      click_on 'Создать вопрос'
+      click_on 'Create question'
 
       expect(page).to have_content 'Your question was succesfully created'
       expect(page).to have_content 'Test question with enough characters'
@@ -25,7 +25,7 @@ feature 'User can create question', %q(
     end
 
     scenario 'asks a question with errors' do
-      click_on 'Создать вопрос'
+      click_on 'Create question'
 
       expect(page).to have_content "Title can't be blank"
     end
@@ -33,7 +33,7 @@ feature 'User can create question', %q(
 
   scenario 'Unauthenticated user tries to ask a question' do
     visit questions_path
-    click_on 'Задать вопрос'
+    click_on 'Create question'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
