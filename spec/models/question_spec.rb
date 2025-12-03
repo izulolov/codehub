@@ -4,7 +4,7 @@ RSpec.describe Question, type: :model do
   subject { build(:question) }
 
   describe 'associations' do
-    # it { should belong_to(:user) }
+    it { should belong_to(:user) }
     it { should have_many(:answers).dependent(:destroy) }
   end
 
@@ -128,8 +128,7 @@ RSpec.describe Question, type: :model do
   describe 'database columns' do
     it { should have_db_column(:title).of_type(:string).with_options(null: false) }
     it { should have_db_column(:body).of_type(:text).with_options(null: false) }
-    # Проверим когда доавлю user_id
-    # it { should have_db_column(:user_id).of_type(:integer) }
+    it { should have_db_column(:user_id).of_type(:integer) }
     it { should have_db_column(:created_at).of_type(:datetime) }
     it { should have_db_column(:updated_at).of_type(:datetime) }
   end
