@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
-  before_action :load_question, only: [ :create, :update ]
+  before_action :authenticate_user!
+  before_action :load_question, only: [ :create ]
   before_action :load_answer, only: [ :update, :destroy ]
+  before_action :check_author!, only: [ :update, :destroy ]
 
   def create
     # @answer = @question.answers.new(answer_params) - создаёт nil, будет ошибка
@@ -10,6 +12,7 @@ class AnswersController < ApplicationController
     # Такой метод не доавляет ответ в коллекцию, поэтому будет не nil
     @answer = Answer.new(answer_params)
     @answer.question = @question
+    @answer.user = current_user
 
     if @answer.save
       redirect_to @question, notice: "Answer was successfully created."
@@ -46,5 +49,11 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  def check_author!
+    if @answer.user != current_user
+      redirect_to question_path(@answer.question), alert: "You are not authorized to perform this action."
+    end
   end
 end
