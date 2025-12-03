@@ -1,6 +1,7 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: [ :new, :create, :edit, :update, :destroy ]
   before_action :load_question, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author!, only: [ :edit, :update, :destroy ]
 
   def index
     @questions = Question.all
@@ -22,7 +23,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
       redirect_to @question, notice: "Your question was succesfully created"
@@ -52,5 +53,11 @@ class QuestionsController < ApplicationController
 
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  def check_author!
+    unless @question.user == current_user
+      redirect_to root_path, alert: "You are not authorized to perform this action"
+    end
   end
 end
