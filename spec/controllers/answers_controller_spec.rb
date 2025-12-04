@@ -1,12 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
+  let(:answer) { create(:answer, question: question, user: user) }
   let(:valid_attributes) { attributes_for(:answer) }
   let(:invalid_attributes) { attributes_for(:answer, body: nil) }
 
   describe 'POST #create' do
+    before { login(user) }
+
     context 'with valid data' do
       subject(:create_answer) do
         post :create, params: { question_id: question.id, answer: valid_attributes }
@@ -44,6 +47,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
+
     let(:new_body) { "This is new body for testing update test!" }
 
     context 'with valid data' do

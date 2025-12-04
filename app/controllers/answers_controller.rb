@@ -24,8 +24,7 @@ class AnswersController < ApplicationController
 
   def update
     if @answer.update(answer_params)
-      redirect_to @question,
-      notice: "Answer was successfully updated."
+      redirect_to @answer.question, notice: "Answer was successfully updated."
     else
       flash.now[:alert] = "Failed to update answer."
       render "questions/show", status: :unprocessable_entity
